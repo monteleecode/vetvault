@@ -1,0 +1,128 @@
+<div id="homepageContent">
+
+
+    <div class="home1">
+        <h2>Profile Details</h2>
+        <div id="userDetails">
+            <h4>Name</h4>
+            <p><%- name %></p>
+            <h4>Email</h4>
+            <p> <%- email %></p>
+            <h4>Phone</h4>
+            <p> <%- phone %></p>
+        </div>
+        <!-- <button id="editProfile">Edit</button> -->
+        <h2>My Pets</h2>
+        <div id="smallPetList">
+            <% pets.forEach(function(pet) { %>
+                <form method="GET" action=<%="/petProfile/" + pet.PetID %>>
+                    <a href="/petProfile/<%= pet.PetID %>"><%- pet.Name %></a>
+                </form>
+                <% }); %>
+        </div>
+    </div>
+
+
+    <div id="navigation" class="home2">
+        <a href="/prescriptions"><button id="prescriptions">Prescriptions</button></a>
+        <form method="GET" action=<%="/petIndex/" + userID %>
+            <a href="/petIndex"><button id="myPets">My Pets</button></a>
+        </form>
+        <a href="/schedule"><button id="schedule">Schedule</button></a>
+    </div>
+
+    <div class="home3">
+        <button id="notificationBtn">Notifications</button>
+        <button id="homeMedBtn">Medications</button>
+    </div>
+
+    <div class="home4">
+
+        <div id="homeNotis" class="homeNoti_Med">
+            <h2>Notifications</h2>
+            <div class="listOverflowHomepage">
+                <ul>
+                    <% notifications.forEach(notification=> { %>
+                        <li class="listItem">
+                            <%= notification.Description %>
+                        </li>
+                        <% }) %>
+                </ul>
+            </div>
+        </div>
+
+        <div id="homeMeds" class="homeNoti_Med">
+            <h2>Medications<span><a class="viewAll" href="/prescriptions">View All</a></span></h2>
+            <div class="listOverflowHomepage">
+                <ul>
+                    <% prescriptions.forEach(function(prescription) { %>
+                        <li class="listItem">
+                            <div id="">
+                                <h4>Name: <%= prescription.Name %>
+                                </h4>
+                                <span><%= prescription.MedName %>
+                                </span>
+                                <span style="font-style: italic;">| <%= prescription.Description %>
+                                </span>
+                            </div>
+                        </li>
+                        <% }); %>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // Replace <%= userID %> with the actual userId from the server side
+    const userID = '<%= userID %>';
+    const socket = io({
+        query: { userID }
+    });
+
+    socket.on('connect', () => {
+        console.log('Connected to server');
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+    });
+
+    socket.on(`notification_${userID}`, (data) => {
+        console.log('Received notifications:', data.notifications);
+        const notificationsList = document.getElementById('notifications');
+        notificationsList.innerHTML = ''; // Clear the current notifications
+        data.notifications.forEach(notification => {
+            const newNotificationItem = document.createElement('li');
+            newNotificationItem.textContent = notification.Description;
+            notificationsList.appendChild(newNotificationItem);
+        });
+    });
+    $(document).ready(function () {
+    // Add the 'selected' class to the #generalInfoButton when the page loads
+    $("#notificationBtn").addClass('selected');
+
+    $("#notificationBtn").click(function () {
+        $("#homeNotis").show();
+        $("#homeMeds").hide();
+        // Add the 'selected' class to the clicked button and remove it from the other button
+        $(this).addClass('selected');
+        $("#homeMedBtn").removeClass('selected');
+    });
+
+    // Add this block
+    $("#homeMedBtn").click(function () {
+        $("#homeMeds").show();
+        $("#homeNotis").hide();
+        // Add the 'selected' class to the clicked button and remove it from the other button
+        $(this).addClass('selected');
+        $("#notificationBtn").removeClass('selected');
+    });
+});
+</script>

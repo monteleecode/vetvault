@@ -1,0 +1,277 @@
+<div class="profileTemplate">
+  <div class="profileDetails">
+    <!-- IMAGE SELECTION HERE -->
+    <div class="profile-layout">
+      <img class="profile_picture" src="<%- petImage.URL %>" title="source: imgur.com" />
+      <p style="font-weight: bold; font-size: 2em;"><%- pet.Name %></p>
+      <div id="petDetails">
+        <div class="pd1">
+          <div class="petCategory">Owner</div>
+          <p><%- pet.UserName %></p>
+        </div>
+        <div class="pd2">
+          <div class="petCategory">Age</div>
+          <p style="margin-right: 15px;"><%- petInfo.Pet_Age %></p>
+        </div>
+        <div class="pd3">
+          <div class="petCategory">Sex</div>
+          <p><%- pet.Gender %></p>
+        </div>
+        <div class="pd4">
+          <div class="petCategory">Breed</div>
+          <p><%- pet.Breed %></p>
+        </div>
+        <div class="pd5">
+          <div class="petCategory">Date of Birth</div>
+          <p><%- pet.BirthDate %></p>
+        </div>
+        <div class="pd6">
+          <div class="petCategory">Description</div>
+          <p><%- pet.Description %></p>
+        </div>
+      </div>
+      <div class="pd7">
+        <i class="fas fa-edit"></i>
+        <button id="editPetBtn">Edit Pet</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="petButtons">
+    <button id="generalInfoButton">General Details</button>
+    <button id="medicationsButton">Healthcare Details</button>
+  </div>
+
+  <div id="wholeInfo">
+    <div id="general_info">
+      <h2 style="margin-top: 0px;">Weight Check <span><button class="update_weight">Update Weight</button></span></h2>
+      <div class="listWeight">
+        <div class="wl1">Latest Weight: <%- latestWeight %>lbs</div>
+        <div class="wl2"><%- latestWeightDate %></div>
+        <div class="wl3">Previous Weight: <%- previousWeight %>lbs</div>
+        <div class="wl4"><%- previousWeightDate %></div>
+      </div>
+
+      <h2>Scheduled Reminders<span><a class="viewAll" href="/schedule">View Full Schedule</a></span></h2>
+      <div class="listOverflow">
+        <% reminders.forEach(function(reminder) { %>
+          <li class="listItem"><%- reminder.Description %> On <span style="font-style: italic; color: #888888;"><%-
+                  reminder.ScheduleTime %></span></li>
+          <% }); %>
+      </div>
+
+      <h2>Messages </h2>
+      <div class="listOverflow">
+        <% if (messages.length> 0) { %>
+          <% messages.forEach(function(message) { %>
+            <li class="listItem"><%- message.Urgent_Message %></li>
+            <% }); %>
+              <% } else { %>
+                <div class="no_messages">
+                  <p>No messages so far!</p>
+                </div>
+
+                <% } %>
+      </div>
+    </div>
+
+    <div class="petMedicalInfo">
+      <h2 style="margin-top: 0px;">Prescriptions<span><a class="viewAll" href="/prescriptions">View All</a></span></h2>
+      <div class="listOverflow" style="height: 250px">
+        <% prescriptions.forEach(function(prescription) { %>
+          <li class="listItem">
+            <%- prescription.MedName %> | Portion: <%- prescription.Portion %> | Rate: <%- prescription.Rate %> <span
+                    style="font-style: italic; color: #888888; float: right;">For: <%- pet.BodyPart %></span>
+          </li>
+          <% }); %>
+          
+      </div>
+      <a href="/createPrescription" class="addPrescription">Add Prescription</a>
+      <h2>Conditions</h2>
+      <div class="listWeight">
+        <div class="wl1">
+          <p>Name: <%- pet.BodyPart %></p>
+        </div>
+        <div class="wl2">
+          <p>Symptom: <%- pet.Symptom %> </p>
+        </div>
+        <div class="wl3">
+          <p>Treatment: <%- pet.MedName %></p>
+        </div>
+        <div class="wl4">
+          <p>Description: <%- consDesc %></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="editPetForm" class="editPetInfo">
+      <h2>Edit Pet Information</h2>
+      <form action="/petProfile/<%-pet.PetID%>/edit" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        <label for="breed">Breed:</label>
+        <input type="text" id="breed" name="breed">
+        <label for="birthdate">Birthdate:</label>
+        <input type="date" id="birthdate" name="birthdate">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+        <label for="userName">Owner:</label>
+        <input type="text" id="userName" name="userName">
+        <input id="updateInfoBtn" type="submit" value="Update Pet Information">
+      </form>
+      <input id="cancelBtn" style="display: none;" href="/petProfile" type="submit" value="Cancel">
+    </div>
+    
+
+    <div id="updateWeightInfo" class="editPetInfo">
+      <h2>Update Weight</h2>
+      <form action="/petProfile/<%-pet.PetID%>/edit" method="post">
+        <label for="weight">Weight:</label>
+        <input type="number" id="weight" name="weight" required>
+        <label for="weightDate">Date:</label>
+        <input type="date" id="date" name="weightDate" required>
+        <input id="updateWeightBtn" type="submit" value="Update Weight">
+
+        <div style="display: none;">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name">
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <label for="breed">Breed:</label>
+          <input type="text" id="breed" name="breed">
+          <label for="birthdate">Birthdate:</label>
+          <input type="date" id="birthdate" name="birthdate">
+          <label for="description">Description:</label>
+          <textarea id="description" name="description"></textarea>
+          <label for="userName">Owner:</label>
+          <input type="text" id="userName" name="userName">
+        </div>
+      </form>
+      <input id="cancelBtnWeight" style="display: none;" href="/petProfile" type="submit" value="Cancel">
+
+      
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  let lastSelected = 'general_info'
+  $(document).ready(function () {
+    $("#generalInfoButton").addClass('selected');
+
+    $("#generalInfoButton").click(function () {
+      $("#general_info").show();
+      $(".petMedicalInfo").hide();
+      $(this).addClass('selected');
+      $("#medicationsButton").removeClass('selected');
+      lastSelected = 'general_info'
+    });
+
+    $("#medicationsButton").click(function () {
+      $("#general_info").hide();
+      $(".petMedicalInfo").show();
+      $(this).addClass('selected');
+      $("#generalInfoButton").removeClass('selected');
+      lastSelected = 'petMedicalInfo'
+    });
+
+    $('#editPetBtn').click(function () {
+      console.log('Edit button clicked');
+      console.log($('#editPetForm')); 
+      $('#editPetForm').css('display', 'block');
+      $('#cancelBtn').css('display', 'block');
+      $('#petButtons').css('display', 'none');
+      $('#general_info').css('display', 'none');
+      $('.petMedicalInfo').css('display', 'none');
+    });
+
+    // Add click event listener to the "Update Information" button
+    $('#updateInfoBtn').click(function (e) {
+
+      if (!confirm('Are you sure?')) {
+
+        e.preventDefault();
+      }
+    });
+
+    $('#cancelBtn').click(function (e) {
+
+      if (!confirm('Are you sure you want to cancel?')) {
+
+        e.preventDefault();
+      } else {
+
+        $('#editPetForm').hide();
+        $('#cancelBtn').hide();
+
+        $('#petButtons').show();
+
+        if (lastSelected === 'general_info') {
+          $('#general_info').show();
+          $('.petMedicalInfo').hide();
+        } else {
+          $('#general_info').hide();
+          $('.petMedicalInfo').show();
+        }
+        // Reset the form
+        $('#editPetForm')[0].reset();
+      }
+    });
+
+        // Add click event listener to the "Update Information" button
+      $('#updateWeightBtn').click(function (e) {
+      if (!confirm('Are you sure?')) {
+        e.preventDefault();
+      }
+    });
+    
+    $(".update_weight").click(function () {
+      $('#updateWeightInfo').css('display', 'block');
+      $('#cancelBtnWeight').css('display', 'block');
+      $('#petButtons').css('display', 'none');
+      $('#general_info').css('display', 'none');
+      $('.petMedicalInfo').css('display', 'none');
+    });
+
+    $('#cancelBtnWeight').click(function (e) {
+      if (!confirm('Are you sure you want to cancel?')) {
+
+        e.preventDefault();
+      } else {
+
+        $('#updateWeightInfo').hide();
+        $('#cancelBtnWeight').hide();
+
+        $('#petButtons').show();
+        $('.update_weight').show();
+
+        if (lastSelected === 'general_info') {
+          $('#general_info').show();
+          $('.petMedicalInfo').hide();
+        } else {
+          $('#general_info').hide();
+          $('.petMedicalInfo').show();
+        }
+        // Reset the form
+        $('#updateWeightInfo')[0].reset();
+      }
+    });
+
+
+  });
+
+
+</script>
